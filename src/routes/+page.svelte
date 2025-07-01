@@ -2,15 +2,13 @@
   import { onMount } from 'svelte';
   import ParticleSystem from '$lib/ParticleSystem.svelte';
   import ThreePixelSpaceship from '$lib/ThreePixelSpaceship.svelte';
+  import ThreeCountdown from '$lib/ThreeCountdown.svelte';
   
-  let email = '';
-  let isNotified = false;
   let mouseX = 0;
   let mouseY = 0;
-  let notifyButton: HTMLButtonElement;
   let mainElement: HTMLElement;
   
-  // Mouse tracking for parallax and magnetic effects
+  // Mouse tracking for parallax effects
   function handleMouseMove(event: MouseEvent) {
     mouseX = event.clientX;
     mouseY = event.clientY;
@@ -24,34 +22,6 @@
       
       mainElement.style.setProperty('--mouse-x', `${moveX}px`);
       mainElement.style.setProperty('--mouse-y', `${moveY}px`);
-    }
-    
-    // Magnetic button effect - Enhanced
-    if (notifyButton) {
-      const rect = notifyButton.getBoundingClientRect();
-      const buttonCenterX = rect.left + rect.width / 2;
-      const buttonCenterY = rect.top + rect.height / 2;
-      const distance = Math.sqrt(
-        Math.pow(event.clientX - buttonCenterX, 2) + 
-        Math.pow(event.clientY - buttonCenterY, 2)
-      );
-      
-      if (distance < 120) {
-        const strength = Math.max(0, (120 - distance) / 120);
-        const moveX = (event.clientX - buttonCenterX) * strength * 0.08;
-        const moveY = (event.clientY - buttonCenterY) * strength * 0.08;
-        
-        notifyButton.style.transform = `translate(${moveX}px, ${moveY}px)`;
-      } else {
-        notifyButton.style.transform = 'translate(0, 0)';
-      }
-    }
-  }
-  
-  function handleNotify() {
-    if (email && email.includes('@')) {
-      isNotified = true;
-      console.log('Email registered:', email);
     }
   }
   
@@ -91,11 +61,11 @@
     <div class="relative">
       <!-- Heartbeat glow effect behind logo -->
       <div class="absolute inset-0 text-white font-black text-2xl logo-heartbeat">
-        ZERO
+        wyspr
       </div>
       <!-- Main logo with liquid hover effect -->
       <h1 class="relative text-white font-black text-2xl tracking-wider text-liquid">
-        ZERO
+        wyspr
       </h1>
     </div>
   </div>
@@ -107,15 +77,15 @@
       <!-- Main Heading -->
       <div class="reveal-1">
         <h2 class="text-5xl md:text-7xl font-black text-white leading-tight tracking-tight">
-          <span class="text-silence-glow text-liquid">Silence.</span><br/>
+          <span class="text-silence-glow">Silence.</span><br/>
           <span class="text-gray-300 text-glitch">Encrypted.</span><br/>
-          <span class="text-gray-400 text-liquid">Delivered.</span>
+          <span class="text-gray-400">Delivered.</span>
         </h2>
       </div>
 
       <!-- Subheading -->
       <div class="reveal-2">
-        <p class="text-xl md:text-2xl text-gray-300 font-light max-w-2xl mx-auto leading-relaxed text-liquid">
+        <p class="text-xl md:text-2xl text-gray-300 font-light max-w-2xl mx-auto leading-relaxed">
           A messaging app with no screenshots, no noise, no metadata.
         </p>
       </div>
@@ -128,7 +98,7 @@
       <!-- Feature Points -->
       <div class="reveal-3">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto text-left">
-          <div class="flex items-start space-x-3 text-liquid">
+          <div class="flex items-start space-x-3">
             <div class="w-2 h-2 bg-white rounded-full mt-3 flex-shrink-0"></div>
             <div>
               <h3 class="text-lg font-bold text-white">Matrix-Powered</h3>
@@ -136,7 +106,7 @@
             </div>
           </div>
           
-          <div class="flex items-start space-x-3 text-liquid">
+          <div class="flex items-start space-x-3">
             <div class="w-2 h-2 bg-white rounded-full mt-3 flex-shrink-0"></div>
             <div>
               <h3 class="text-lg font-bold text-white">Press-to-Reveal</h3>
@@ -144,7 +114,7 @@
             </div>
           </div>
           
-          <div class="flex items-start space-x-3 text-liquid">
+          <div class="flex items-start space-x-3">
             <div class="w-2 h-2 bg-white rounded-full mt-3 flex-shrink-0"></div>
             <div>
               <h3 class="text-lg font-bold text-white">Self-Erasing</h3>
@@ -152,7 +122,7 @@
             </div>
           </div>
           
-          <div class="flex items-start space-x-3 text-liquid">
+          <div class="flex items-start space-x-3">
             <div class="w-2 h-2 bg-white rounded-full mt-3 flex-shrink-0"></div>
             <div>
               <h3 class="text-lg font-bold text-white">Zero Tracking</h3>
@@ -165,52 +135,20 @@
       <!-- Brand Copy -->
       <div class="reveal-4 py-6">
         <div class="space-y-2 text-gray-500 text-sm font-medium">
-          <p class="text-liquid">"You can't leak what you don't log."</p>
-          <p class="text-liquid">"Designed for silence."</p>
-          <p class="text-liquid">"Matrix-powered. Zero-trace."</p>
+          <p>"You can't leak what you don't log."</p>
+          <p>"Designed for silence."</p>
+          <p>"Matrix-powered. Zero-trace."</p>
         </div>
       </div>
 
-      <!-- Email Signup -->
+      <!-- Launch Countdown -->
       <div class="reveal-5">
-        {#if !isNotified}
-          <div class="max-w-md mx-auto">
-            <p class="text-gray-300 mb-4 text-lg font-medium text-liquid">Get notified when we launch</p>
-            <div class="flex gap-3">
-              <input
-                type="email"
-                bind:value={email}
-                placeholder="your@email.com"
-                class="flex-1 px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none input-focus-ring transition-all duration-300"
-              />
-              <button
-                bind:this={notifyButton}
-                on:click={handleNotify}
-                class="px-6 py-3 bg-white text-black font-bold rounded-lg button-elevation magnetic-button transition-all duration-300"
-              >
-                Notify Me
-              </button>
-            </div>
-          </div>
-        {:else}
-          <div class="max-w-md mx-auto reveal-1">
-            <div class="text-green-400 text-lg font-medium">
-              ✓ You'll be the first to know
-            </div>
-            <p class="text-gray-400 text-sm mt-2">
-              We'll notify you when ZERO launches
-            </p>
-          </div>
-        {/if}
+        <div class="max-w-5xl mx-auto">
+          <ThreeCountdown />
+        </div>
       </div>
     </div>
   </div>
 </main>
 
-<style>
-  /* Ensure no scrolling on this component */
-  :global(html, body) {
-    overflow: hidden !important;
-    height: 100vh;
-  }
-</style>
+

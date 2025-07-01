@@ -276,6 +276,20 @@
   transition: transform 120ms ease-out;
 }
 
+/* Galaxy background enhancements */
+:global(html, body) {
+  overflow: hidden !important;
+  height: 100vh;
+  background: #000;
+}
+
+:global(body) {
+  background: 
+    radial-gradient(ellipse at top, rgba(3, 3, 12, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(5, 3, 15, 0.1) 0%, transparent 50%),
+    linear-gradient(180deg, #000000 0%, #020206 50%, #000000 100%);
+}
+
 /* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   .logo-heartbeat,
