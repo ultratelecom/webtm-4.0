@@ -1,9 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   
-  // Countdown target: 20 days from now
-  const launchDate = new Date();
-  launchDate.setDate(launchDate.getDate() + 20);
+  // Countdown target: Fixed launch date - July 21, 2025
+  const launchDate = new Date('2025-07-21T23:59:59Z');
   
   let timeRemaining = {
     days: 0,

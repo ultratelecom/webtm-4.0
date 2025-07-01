@@ -40,6 +40,7 @@
 </script>
 
 <svelte:head>
+  <title>Whisper - Silence. Encrypted. Delivered.</title>
   <meta name="robots" content="index, follow" />
 </svelte:head>
 
