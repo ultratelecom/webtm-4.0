@@ -1,6 +1,10 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte';
   import * as THREE from 'three';
+  
+  const dispatch = createEventDispatcher<{
+    glitch: void;
+  }>();
   
   interface SpaceshipState {
     x: number;
@@ -114,6 +118,11 @@
   function triggerGlitch(isMouseTriggered = false) {
     spaceship.isGlitching = true;
     
+    // Dispatch glitch event only for user-triggered glitches
+    if (isMouseTriggered) {
+      dispatch('glitch');
+    }
+    
     // Glitch materials
     if (spaceshipGroup) {
       spaceshipGroup.children.forEach((cube) => {
@@ -203,13 +212,16 @@
       spaceshipScreenPos.x = (spaceshipWorldPos.x * 0.5 + 0.5) * window.innerWidth;
       spaceshipScreenPos.y = (spaceshipWorldPos.y * -0.5 + 0.5) * window.innerHeight;
       
-      // Check mouse proximity (within 80 pixels)
+      // Check mouse proximity (within 80 pixels on desktop, 120 on mobile)
+      const isMobile = window.innerWidth < 768;
+      const proximityThreshold = isMobile ? 120 : 80;
+      
       const distance = Math.sqrt(
         Math.pow(mouseX - spaceshipScreenPos.x, 2) + 
         Math.pow(mouseY - spaceshipScreenPos.y, 2)
       );
       
-      if (distance < 80 && !spaceship.isGlitching) {
+      if (distance < proximityThreshold && !spaceship.isGlitching) {
         // Clear any pending auto-glitch
         if (glitchTimeout) {
           clearTimeout(glitchTimeout);
@@ -271,10 +283,17 @@
     const firstGlitch = Math.random() * 3000 + 2000;
     glitchTimeout = setTimeout(triggerGlitch, firstGlitch);
     
-    // Handle mouse movement
+    // Handle mouse movement (with touch support for mobile)
     const handleMouseMove = (event: MouseEvent) => {
       mouseX = event.clientX;
       mouseY = event.clientY;
+    };
+    
+    const handleTouchMove = (event: TouchEvent) => {
+      if (event.touches.length > 0) {
+        mouseX = event.touches[0].clientX;
+        mouseY = event.touches[0].clientY;
+      }
     };
     
     // Handle resize
@@ -285,6 +304,7 @@
     };
     
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('resize', handleResize);
     
     return () => {
@@ -295,6 +315,7 @@
         clearTimeout(glitchTimeout);
       }
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('resize', handleResize);
       if (renderer) {
         renderer.dispose();

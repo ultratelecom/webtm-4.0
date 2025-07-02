@@ -2,6 +2,69 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
+/* Mobile viewport and safe area handling */
+:global(html, body) {
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height for mobile */
+  background: #000;
+}
+
+:global(body) {
+  background: 
+    radial-gradient(ellipse at top, rgba(3, 3, 12, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(5, 3, 15, 0.1) 0%, transparent 50%),
+    linear-gradient(180deg, #000000 0%, #020206 50%, #000000 100%);
+  
+  /* Handle safe areas on mobile */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Mobile scroll improvements */
+.mobile-scroll {
+  /* Better scrolling on mobile */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-scroll {
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto;
+  }
+}
+
+/* Glitch counter animations */
+@keyframes score-pulse {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    transform: scale(1.1);
+    text-shadow: 
+      0 0 20px rgba(255, 255, 255, 0.8),
+      0 0 30px rgba(0, 255, 255, 0.4),
+      0 0 40px rgba(255, 0, 127, 0.3);
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+}
+
+.score-pulse {
+  animation: score-pulse 0.6s ease-out;
+}
+
+.glitch-score {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
 /* Custom animations and glows for ZERO */
 @keyframes pulse-glow {
   0%, 100% {
@@ -276,20 +339,6 @@
   transition: transform 120ms ease-out;
 }
 
-/* Galaxy background enhancements */
-:global(html, body) {
-  overflow: hidden !important;
-  height: 100vh;
-  background: #000;
-}
-
-:global(body) {
-  background: 
-    radial-gradient(ellipse at top, rgba(3, 3, 12, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom, rgba(5, 3, 15, 0.1) 0%, transparent 50%),
-    linear-gradient(180deg, #000000 0%, #020206 50%, #000000 100%);
-}
-
 /* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   .logo-heartbeat,
@@ -300,7 +349,8 @@
   .reveal-5,
   .layout-settle,
   .text-glitch,
-  .text-silence-glow {
+  .text-silence-glow,
+  .score-pulse {
     animation: none !important;
   }
   
